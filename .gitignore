@@ -1,0 +1,8 @@
+/fortrabbit.txt
+/composer.lock
+/vendor
+/resources
+.DS_Store
+/app/logs/*.log
+*~
+.idea
