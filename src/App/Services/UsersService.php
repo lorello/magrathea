@@ -27,6 +27,9 @@ class UsersService extends BaseService
     function update($id, $user)
     {
         $user = User::id($id);
+        if(!$user) {
+          throw new \Exception("User with id '$id' not found");
+        }
         $user->update($user);
         return $user->save();
     }
@@ -34,6 +37,9 @@ class UsersService extends BaseService
     function delete($id)
     {
         $user = User::id($id);
+        if(!$user) {
+          throw new \Exception("User with id '$id' not found");
+        }
         $user->delete();
     }
 }

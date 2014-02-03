@@ -24,7 +24,8 @@ class UsersController
     public function save(Request $request)
     {
         $user = $this->getDataFromRequest($request);
-        return new JsonResponse(array("id" => $this->usersService->save($user)));
+        $id = $this->usersService->save($user);
+        return new JsonResponse(array("id" => $id));
     }
 
     public function update($id, Request $request)
