@@ -1,0 +1,4 @@
+Creare indici sulla collections users
+
+db.user.ensureIndex( { "email": 1 }, { unique: true } )
+
