@@ -12,6 +12,10 @@ class User extends \Purekid\Mongodm\Model
         'password'  => array('type'=>'string')
     );
 
+    function save($data) {
+        return $parent::save($data);
+    }
+
     function setName($value) {
         if (empty($value))
             throw new Exception('User name cannot be empty');
@@ -23,9 +27,13 @@ class User extends \Purekid\Mongodm\Model
     function setEmail($value) {
         if (empty($value))
             throw new Exception('Email cannot be empty');
-        if (filter_var($value, FILTER_VALIDATE_EMAIL)) {
-            $this->__setter('email', $value);
+        if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {
+            throw new \Exception("Email '$value' is not valid");
         }
+        if (User::count(array('email' => $value)) > 0) {
+            throw new \Exception("Duplicate user with email '$value''");
+        }
+        return $this->__setter('email', $value);
     }
 
     function setPassword($value) {
@@ -33,6 +41,6 @@ class User extends \Purekid\Mongodm\Model
             throw new Exception('User password cannot be empty');
         # TODO: find a good regexp for password
         if (!preg_match('/[A-Za-z0-9?=:;,_-]{8,}/',$value))
-        $this->__setter('password', $value(pot));
+        $this->__setter('password', $value);
     }
 }

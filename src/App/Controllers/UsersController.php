@@ -25,7 +25,11 @@ class UsersController
     {
         // TODO: missing check for duplicate user email
         $user = $this->getDataFromRequest($request);
-        $result = $this->usersService->save($user);
+        try {
+            $result = $this->usersService->save($user);
+        } catch (Exception $e) {
+            return new JsonResponse(array('message' => $e->getMessage()), 500);
+        }
         $id = (string) $result;
         return new JsonResponse(array("id" => $id, 'name'=>$user['name'], 'email'=>$user['email'], 'password'=>'****'), 201);
     }
