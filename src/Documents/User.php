@@ -12,10 +12,6 @@ class User extends \Purekid\Mongodm\Model
         'password'  => array('type'=>'string')
     );
 
-    function save($data) {
-        return $parent::save($data);
-    }
-
     function setName($value) {
         if (empty($value))
             throw new Exception('User name cannot be empty');
