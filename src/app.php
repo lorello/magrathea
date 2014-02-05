@@ -69,6 +69,16 @@ $app->get(
     }
 );
 
+$app->post(
+    '/test',
+    function(Request $request) use ($app) {
+        $result = '';
+        foreach($request->request->all() as $item)
+            $result .= $item.'|';
+        return $result;
+    }
+);
+
 $app->get(
     '/mongo/name/{name}',
     function ($name) use ($app) {

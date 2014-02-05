@@ -8,6 +8,6 @@ class Cluster extends \Purekid\Mongodm\Model
 
   protected static $attrs = array(
     'name'      => array('type'=>'string'),
-    'layers'    => array('model'=> 'Documents\Host', 'type'=>'embeds')
+    'layers'    => array('model'=> 'Documents\Node', 'type'=>'embeds')
   );
 }

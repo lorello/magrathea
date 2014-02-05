@@ -4,11 +4,11 @@ namespace Documents;
 
 class Deploy extends \Purekid\Mongodm\Model 
 {
-  static $collection = 'deploy';
+  static $collection = 'deploys';
 
   protected static $attrs = array(
     'app'       => array('model'=> 'Documents\App',     'type'=>'reference'),
-    'appenv'    => array('model'=> 'Documents\Appenv',  'type'=>'reference'),
+    'instance'  => array('model'=> 'Documents\Instance','type'=>'reference'),
     'c_at'      => array('type' => 'timestamp'),
   );
 }

@@ -4,7 +4,7 @@ namespace Documents;
 
 class App extends \Purekid\Mongodm\Model 
 {
-  static $collection = "app";
+  static $collection = "apps";
 
   protected static $attrs = array(
     'name'      => array('type'=>'string'),

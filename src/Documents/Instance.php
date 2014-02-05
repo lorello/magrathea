@@ -4,7 +4,7 @@ namespace Documents;
 
 class Instance extends \Purekid\Mongodm\Model
 {
-  static $collection = "instance";
+  static $collection = "instances";
 
   protected static $attrs = array(
     'id'        => array('type' =>'string'),

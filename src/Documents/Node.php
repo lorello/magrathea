@@ -2,9 +2,9 @@
 
 namespace Documents;
 
-class Host extends \Purekid\Mongodm\Model 
+class Node extends \Purekid\Mongodm\Model
 {
-  static $collection = "host";
+  static $collection = "nodes";
 
   protected static $attrs = array(
     'hostname'  => array('type'=>'string'),
