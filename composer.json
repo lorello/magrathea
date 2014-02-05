@@ -12,8 +12,8 @@
 		"email": "lorenzo.salvadorini@softecspa.it"
 	}],
 	"require": {
-		"php": ">=5.3.0",
-		"silex/silex": "~1.1",
+        "php": ">=5.5.0",
+        "silex/silex": "~1.1",
 		"monolog/monolog": "~1.6",
 		"doctrine/dbal": "~2.4",
 		"nesbot/Carbon": "~1.6",
@@ -28,8 +28,8 @@
 		"psr-0": {
 			"App": "src/",
 			"Documents": "src/",
-      "Purekid\\Mongodm\\": "src",
-      "Wildsurfer\\Provider\\":"src"
-		}
+            "Purekid\\Mongodm\\": "src",
+            "Wildsurfer\\Provider\\": "src"
+        }
 	}
 }
