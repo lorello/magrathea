@@ -33,10 +33,11 @@ class UsersService extends BaseService
     function save($data)
     {
         $user = new User();
-        $user->setName($data['name']);
-        $user->setEmail($data['email']);
-        $user->setPassword($data['password']);
-        $user->save();
+        // not needed
+        //$user->setName($data['name']);
+        //$user->setEmail($data['email']);
+        //$user->setPassword($data['password']);
+        $user->save($data);
 
         // return the MongoId object
         return $user->getId();
