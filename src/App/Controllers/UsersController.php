@@ -24,8 +24,9 @@ class UsersController
     public function save(Request $request)
     {
         $user = $this->getDataFromRequest($request);
-        $id = $this->usersService->save($user);
-        return new JsonResponse(array("id" => $id));
+        $result = $this->usersService->save($user);
+        $id = (string) $result;
+        return new JsonResponse(array("id" => $id, 'name'=>$user['name'], 'email'=>$user['email'], 'password'=>'****'), 201);
     }
 
     public function update($id, Request $request)
@@ -42,8 +43,10 @@ class UsersController
 
     private function getDataFromRequest(Request $request)
     {
-        return $user = array(
-            'user' => $request->request->get('user')
+        return array(
+                'name'      => $request->request->get('name'),
+                'email'     => $request->request->get('email'),
+                'password'  => $request->request->get('password')
         );
     }
 }

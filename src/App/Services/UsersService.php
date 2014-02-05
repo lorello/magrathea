@@ -17,10 +17,14 @@ class UsersService extends BaseService
         return $s;
     }
 
-    function save($user)
+    function save($data)
     {
-        $user = new User($user);
+        $user = new User();
+        $user->setName($data['name']);
+        $user->setEmail($data['email']);
+        $user->setPassword($data['password']);
         $user->save();
+        // return the MongoId object
         return $user->getId();
     }
 
