@@ -6,15 +6,28 @@ use Documents\User;
 
 class UsersService extends BaseService
 {
+    public function get($id)
+    {
+        return User::one(array('id' => $id));
+    }
+
+    public function getByEmail($value)
+    {
+        return User::one(array('email' => $value));
+    }
+
     public function getAll()
     {
         $users = User::all();
-        $s = '';
-        foreach($users as $u)
-        {
-          $s .= $u->getName().' ';
+        foreach ($users as $u) {
+            $result[] = array(
+                'id'    => (string)$u->getId(),
+                'name'  => $u->getName(),
+                'email' => $u->getEmail()
+            );
         }
-        return $s;
+
+        return $result;
     }
 
     function save($data)
@@ -24,26 +37,29 @@ class UsersService extends BaseService
         $user->setEmail($data['email']);
         $user->setPassword($data['password']);
         $user->save();
+
         // return the MongoId object
         return $user->getId();
     }
 
-    function update($id, $user)
+    function update($id, $data)
     {
         $user = User::id($id);
-        if(!$user) {
-          throw new \Exception("User with id '$id' not found");
+        if (!$user) {
+            throw new \Exception("User with id '$id' not found");
         }
-        $user->update($user);
+        $user->update($data);
+
         return $user->save();
     }
 
     function delete($id)
     {
         $user = User::id($id);
-        if(!$user) {
-          throw new \Exception("User with id '$id' not found");
+        if (!$user) {
+            throw new \Exception("User with id '$id' not found");
         }
-        $user->delete();
+
+        return $user->delete();
     }
 }
