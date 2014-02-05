@@ -19,6 +19,10 @@ class UsersService extends BaseService
 
     function save($data)
     {
+        # Move unicity check to Documents\User
+        if (User::count(array('email'=>$data['email']))>0) {
+            throw new \Exception("Duplicate user with email $data[email]");
+        }
         $user = new User();
         $user->setName($data['name']);
         $user->setEmail($data['email']);

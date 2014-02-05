@@ -23,6 +23,7 @@ class UsersController
 
     public function save(Request $request)
     {
+        // TODO: missing check for duplicate user email
         $user = $this->getDataFromRequest($request);
         $result = $this->usersService->save($user);
         $id = (string) $result;
