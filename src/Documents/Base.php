@@ -12,6 +12,7 @@ class Base extends \Purekid\Mongodm\Model
         foreach ($attrs as $key => $attr) {
 
             $value  = $this->__get($key);
+
             // Manage field attribute NOT NULL
             if (isset($attr['null']) and ($attr['null'] === false)) {
                 if (!$this->__isset($key) or empty($value)) {

@@ -2,7 +2,7 @@
 
 namespace Documents;
 
-class User extends \Purekid\Mongodm\Model
+class User extends \Documents\Base
 {
     static $collection = "users";
 
@@ -10,7 +10,7 @@ class User extends \Purekid\Mongodm\Model
         'name'       => array('default' => 'anonym', 'type' => 'string'),
         'email'      => array('type' => 'string'),
         'password'   => array('type' => 'string'),
-        'lastupdate' => array('type' => 'timestamp')
+        'lastupdate' => array('type' => 'timestamp', 'autoupdate' => true)
     );
 
     public static $reserved_names = array(
@@ -64,15 +64,9 @@ class User extends \Purekid\Mongodm\Model
         if (!preg_match('/[A-Za-z0-9?=:;,_-]{8,32}/', $value)) {
             throw new \Exception('Password must be between 8 and 32 characters long and valid characters are letters, numbers and symbols ?=:;,_-');
         }
+
         // TODO: get password_compat if PHP < 5.5
         return $this->__setter('password', password_hash($value, PASSWORD_DEFAULT));
     }
 
-    function __preSave()
-    {
-        $date = new \DateTime();
-        $this->__setter('lastupdate', $date->getTimestamp());
-
-        return parent::__preSave();
-    }
 }

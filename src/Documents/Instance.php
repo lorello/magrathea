@@ -2,22 +2,15 @@
 
 namespace Documents;
 
-class Instance extends \Purekid\Mongodm\Model
+class Instance extends \Documents\Base
 {
     static $collection = "instances";
 
     protected static $attrs = array(
-        'id'         => array('type' => 'string'),
+        'name'       => array('type' => 'string', 'regexp' => '[a-z][a-z0-9]{4,}'),
         'app'        => array('model' => 'Documents\App', 'type' => 'reference'),
         'cluster'    => array('model' => 'Documents\Cluster', 'type' => 'reference'),
-        'lastupdate' => array('type' => 'timestamp'),
+        'lastupdate' => array('type' => 'timestamp', 'autoupdate' => true),
     );
 
-    function __preSave()
-    {
-        $date = new \DateTime();
-        $this->__setter('lastupdate', $date->getTimestamp());
-
-        return parent::__preSave();
-    }
 }
