@@ -18,6 +18,11 @@ class ServicesLoader
         $this->app['users.service'] = $this->app->share(function () {
             return new Services\UsersService();
         });
+        $this->app['nodes.service'] = $this->app->share(
+            function () {
+                return new Services\NodesService();
+            }
+        );
     }
 }
 
