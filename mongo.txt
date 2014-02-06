@@ -1,4 +1,7 @@
 Creare indici sulla collections users
 
-db.user.ensureIndex( { "email": 1 }, { unique: true } )
-
+db.users.ensureIndex( { "email": 1 }, { unique: true } )
+db.users.ensureIndex( { "name": 1 }, { unique: true } )
+db.nodes.ensureIndex( { "hostname": 1 }, { unique: true } )
+db.nodes.ensureIndex( { "fqdn": 1 }, { unique: true } )
+db.clusters.ensureIndex( { "name": 1 }, { unique: true } )

@@ -13,12 +13,13 @@ class App extends \Purekid\Mongodm\Model
         'lastupdate' => array('type' => 'timestamp'),
         'conf'       => array('type' => 'string'),
     );
+    /*
+        function __preSave()
+        {
+            // $date = new \DateTime();
+            // $this->__setter('lastupdate', $date->getTimestamp());
 
-    function __preSave()
-    {
-        $date = new \DateTime();
-        $this->__setter('lastupdate', $date->getTimestamp());
-
-        return parent::__preSave();
-    }
+            return parent::__preSave();
+        }
+    */
 }
