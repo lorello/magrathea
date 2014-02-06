@@ -7,11 +7,24 @@ class User extends \Purekid\Mongodm\Model
     static $collection = "users";
 
     protected static $attrs = array(
-        'name'     => array('default' => 'anonym', 'type' => 'string'),
-        'email'    => array('type' => 'string'),
-        'password' => array('type' => 'string')
+        'name'       => array('default' => 'anonym', 'type' => 'string'),
+        'email'      => array('type' => 'string'),
+        'password'   => array('type' => 'string'),
+        'lastupdate' => array('type' => 'timestamp')
     );
 
+    public static $reserved_names = array(
+        'magrathea',
+        'zaphod',
+        'arthur',
+        'trillian',
+        'ford',
+        'marvin',
+        'vogon',
+        'humma',
+    );
+
+    // Should be unique? Should I introduce Organizations concept?
     function setName($value)
     {
         if (empty($value)) {
@@ -20,7 +33,11 @@ class User extends \Purekid\Mongodm\Model
         if (!preg_match('/[a-z][a-z0-9]{3,32}/', $value)) {
             throw new \Exception('Username must be between 3 and 32 characters long and must contains only letters and numbers');
         }
-        $this->__setter('name', $value);
+        if (in_array($value, User::$reserved_names)) {
+            throw new \Exception("Username '$value' is reserved on this platform, please choose another one");
+        }
+
+        return $this->__setter('name', $value);
     }
 
     function setEmail($value)
@@ -48,6 +65,14 @@ class User extends \Purekid\Mongodm\Model
             throw new \Exception('Password must be between 8 and 32 characters long and valid characters are letters, numbers and symbols ?=:;,_-');
         }
         // TODO: get password_compat if PHP < 5.5
-        $this->__setter('password', password_hash($value, PASSWORD_DEFAULT));
+        return $this->__setter('password', password_hash($value, PASSWORD_DEFAULT));
+    }
+
+    function __preSave()
+    {
+        $date = new \DateTime();
+        $this->__setter('lastupdate', $date->getTimestamp());
+
+        return parent::__preSave();
     }
 }

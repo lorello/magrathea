@@ -34,10 +34,10 @@ class UsersService extends BaseService
     {
         $user = new User();
         // not needed
-        //$user->setName($data['name']);
-        //$user->setEmail($data['email']);
-        //$user->setPassword($data['password']);
-        $user->save($data);
+        $user->setName($data['name']);
+        $user->setEmail($data['email']);
+        $user->setPassword($data['password']);
+        $user->save();
 
         // return the MongoId object
         return $user->getId();
