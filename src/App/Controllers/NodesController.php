@@ -26,6 +26,7 @@ class NodesController
     {
         $data = $this->getDataFromRequest($request);
         try {
+            // return object MondoId
             $id = $this->nodesService->save($data);
         } catch (Exception $e) {
             return new JsonResponse(array('message' => $e->getMessage()), 500);
@@ -46,8 +47,6 @@ class NodesController
             // TODO: Should I return 404 if user does not exists?
             return new JsonResponse(array('message' => $e->getMessage()), 500);
         }
-
-        $id   = (string)$result;
         $item = $this->nodesService->get($id);
 
         return new JsonResponse($item->toArray(), 200);

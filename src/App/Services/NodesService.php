@@ -8,7 +8,12 @@ class NodesService extends BaseService
 {
     public function get($id)
     {
-        return Node::one(array('id' => $id));
+        $item = Node::id($id);
+        if (!($item instanceof Node)) {
+            throw new \Exception("Cannnot find node with id '$id''");
+        }
+
+        return $item;
     }
 
     public function getByHostname($value)
