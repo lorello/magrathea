@@ -1,4 +1,4 @@
-Creare indici sulla collections users
+Index to create on INIT
 
 db.users.ensureIndex( { "email": 1 }, { unique: true } )
 db.users.ensureIndex( { "name": 1 }, { unique: true } )
