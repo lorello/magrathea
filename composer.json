@@ -21,7 +21,8 @@
         "nesbot/Carbon": "~1.6",
         "purekid/mongodm": "dev-master",
         "wildsurfer/silex-provider-mongodm": "dev-master",
-        "symfony/security": "~2.3"
+        "symfony/security": "~2.3",
+        "symfony/browser-kit": ">=2.3,<2.4-dev"
     },
     "require-dev": {
         "phpunit/phpunit": "~3.7",
