@@ -6,6 +6,13 @@ use Documents\Node;
 
 class NodesService extends BaseService
 {
+    public function init()
+    {
+        $n = new Node();
+        $n->drop();
+        $n->initCollection();
+    }
+
     public function get($id)
     {
         $item = Node::id($id);

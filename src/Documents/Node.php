@@ -15,4 +15,10 @@ class Node extends \Documents\Base
         'cluster'    => array('model' => 'Documents\Cluster', 'type' => 'reference'),
         'lastupdate' => array('type' => 'timestamp', 'autoupdate' => true)
     );
+
+    public function initCollection()
+    {
+        self::ensure_index('hostname', array('unique' => true));
+        self::ensure_index('fqdn', array('unique' => true));
+    }
 }

@@ -4,14 +4,14 @@ namespace Documents;
 
 class Base extends \Purekid\Mongodm\Model
 {
-
-    function __preSave()
+    // Add ODM properties
+    protected function __preSave()
     {
         $attrs = self::getAttrs();
 
         foreach ($attrs as $key => $attr) {
 
-            $value  = $this->__get($key);
+            $value = $this->__get($key);
 
             // Manage field attribute NOT NULL
             if (isset($attr['null']) and ($attr['null'] === false)) {
@@ -24,8 +24,8 @@ class Base extends \Purekid\Mongodm\Model
             if ((isset($attr['type']) and $attr['type'] == self::DATA_TYPE_TIMESTAMP) and
                 isset($attr['autoupdate']) and ($attr['autoupdate'] === true)
             ) {
-                $date                  = new \DateTime();
-                $ts = $date->getTimestamp();
+                $date = new \DateTime();
+                $ts   = $date->getTimestamp();
                 $this->__set($key, $ts);
             }
 
@@ -40,4 +40,5 @@ class Base extends \Purekid\Mongodm\Model
 
         return parent::__preSave();
     }
+
 }

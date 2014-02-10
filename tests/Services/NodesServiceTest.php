@@ -10,13 +10,10 @@ use Purekid\Mongodm\MongoDB;
 use App\Services\NodesService;
 use Documents\Node;
 
-
 date_default_timezone_set('Europe/Rome');
-
 
 class NodesServiceTest extends \PHPUnit_Framework_TestCase
 {
-
     private $nodeService;
 
     public function setUp()
@@ -24,6 +21,7 @@ class NodesServiceTest extends \PHPUnit_Framework_TestCase
 
         $app = new Application();
         require __DIR__ . '/../../resources/config/test.php';
+
         $app->register(
             new MongodmServiceProvider(),
             array(
@@ -35,23 +33,8 @@ class NodesServiceTest extends \PHPUnit_Framework_TestCase
             )
         );
 
-
-        //define("ROOT_PATH", __DIR__ . "/..");
-
-        //$app->register(new ServiceControllerServiceProvider());
-
         $this->nodesService = new NodesService();
-
-        // prepopulate
-        /*$data = array(
-            'hostname'  => 'samplehost',
-            'fqdn'      => 'samplehost.mydomain.tld'
-        );
-        $this->nodesService->save($data);
-        */
-        // TODO: setup indexes on nodes collection?
-        Node::drop();
-        //$app['mongodm']->nodes->ensureIndex();
+        $this->nodesService->init();
     }
 
     public function testGetAll()
@@ -99,6 +82,16 @@ class NodesServiceTest extends \PHPUnit_Framework_TestCase
         $this->nodesService->delete($id);
         $data = $this->nodesService->getAll();
         $this->assertEquals(0, count($data));
+    }
+
+    function testGetByHostname()
+    {
+        $node = array(
+            'hostname' => 'testme',
+            'fqdn'     => 'testme.mydomain.tld'
+        );
+        $id   = $this->nodesService->save($node);
+        $this->assertEquals($id, $this->nodesService->getByHostname($node['hostname'])->getId());
     }
 
 }
