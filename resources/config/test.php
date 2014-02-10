@@ -3,8 +3,8 @@ require __DIR__ . '/prod.php';
 $app['debug']     = true;
 $app['log.level'] = Monolog\Logger::DEBUG;
 
-$app['mongodb.host']     = 'localhost:27017';
-$app['mongodb.db']       = 'magrathea-test';
-$app['mongodb.username'] = 'zaphod';
-$app['mongodb.password'] = '42';
+$app['config.mongo.host']     = 'localhost:27017';
+$app['config.mongo.db']       = 'magrathea-test';
+$app['config.mongo.username'] = 'zaphod';
+$app['config.mongo.password'] = '42';
 

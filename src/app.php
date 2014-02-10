@@ -26,12 +26,13 @@ define("ROOT_PATH", __DIR__ . "/..");
 $app->register(new ServiceControllerServiceProvider());
 
 $app->register(new MongodmServiceProvider(), array(
-    "mongodm.host"      => $app['mongodb.host'],
-    "mongodm.db"        => $app['mongodb.db'],
-    "mongodm.username"  => $app['mongodb.username'],
-    "mongodm.password"  => $app['mongodb.password'],
-    "mongodm.options"   => $app['mongodb.options']
-));
+        "mongodm.host"     => $app['config.mongo.host'],
+        "mongodm.db"       => $app['config.mongo.db'],
+        "mongodm.username" => $app['config.mongo.username'],
+        "mongodm.password" => $app['config.mongo.password'],
+        "mongodm.options"  => $app['config.mongo.options']
+    ));
+
 $app->register(
     new HttpCacheServiceProvider(),
     array(
