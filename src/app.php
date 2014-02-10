@@ -11,9 +11,13 @@ use Symfony\Component\HttpFoundation\Request;
 use App\ServicesLoader;
 use App\RoutesLoader;
 use Carbon\Carbon;
+
+use Symfony\Component\Security\Core\User\UserProviderInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\User;
+
 use Wildsurfer\Provider\MongodmServiceProvider;
 use Purekid\Mongodm\MongoDB; 
-use Documents\User; 
 
 date_default_timezone_set('Europe/Rome');
 
@@ -28,13 +32,52 @@ $app->register(new MongodmServiceProvider(), array(
     "mongodm.password"  => $app['mongodb.password'],
     "mongodm.options"   => $app['mongodb.options']
 ));
-$app->register(new HttpCacheServiceProvider(), array("http_cache.cache_dir" => ROOT_PATH . "/storage/cache",));
+$app->register(
+    new HttpCacheServiceProvider(),
+    array(
+        "http_cache.cache_dir" => ROOT_PATH . "/storage/cache",
+    )
+);
 
 $app->register(new MonologServiceProvider(), array(
     "monolog.logfile" => ROOT_PATH . "/storage/logs/" . Carbon::now('Europe/Rome')->format("Y-m-d") . ".log",
     "monolog.level" => $app["log.level"],
-    "monolog.name" => "application"
-));
+    "monolog.name" => "magrathea"
+    ));
+
+// http://silex.sensiolabs.org/doc/providers/security.html
+$app->register(
+    new Silex\Provider\SecurityServiceProvider(),
+    array(
+        'security.firewalls' => array(
+            //'doc'   => array(
+            //    'anonymous' => true,
+            //    'pattern'   =>  '^/$app[api.endpoint]/$app[api.version]/doc',
+            //),
+            'default' => array(
+                'security'  => $app['debug'] ? false : true,
+                //'pattern'   => '^/$app[api.endpoint]/$app[api.version]',
+                'pattern'   => '^/.*',
+                'http'      => true,
+                'stateless' => true, // don't create cookie for http auth, it send credentials on each request
+                'users'     => $app->share(
+                        function () use ($app) {
+                            return new App\UserProvider($app['users.service']);
+                        }
+                    ),
+            ),
+        )
+    )
+);
+$app['security.role_hierarchy'] = array(
+    'ROLE_ADMIN' => array('ROLE_USER', 'ROLE_ALLOWED_TO_SWITCH'),
+);
+
+/*
+ * $app['security.access_rules'] = array(
+    array('^/admin', 'ROLE_ADMIN', 'https'),
+    array('^.*$', 'ROLE_USER'),
+);*/
 
 
 //handling CORS preflight request
@@ -93,7 +136,7 @@ $app->post(
 $app->get(
     '/mongo/name/{name}',
     function ($name) use ($app) {
-        $user = new User();
+        $user = new Documents\User();
         $user->name = $name;
         $user->age = 10;
         if ($user->save())
@@ -105,7 +148,7 @@ $app->get(
 $app->get(
     '/mongo/users',
     function () use ($app) {
-        $users = User::all();
+        $users = Documents\User::all();
         $s = '';
         foreach($users as $u)
         {

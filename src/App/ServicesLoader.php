@@ -15,12 +15,20 @@ class ServicesLoader
 
     public function bindServicesIntoContainer()
     {
-        $this->app['users.service'] = $this->app->share(function () {
-            return new Services\UsersService();
-        });
-        $this->app['nodes.service'] = $this->app->share(
+        $this->app['users.service'] = $this->app->share(
+            function () {
+                return new Services\UsersService();
+            }
+        );
+
+        $this->app['nodes.service']    = $this->app->share(
             function () {
                 return new Services\NodesService();
+            }
+        );
+        $this->app['clusters.service'] = $this->app->share(
+            function () {
+                return new Services\ClustersService();
             }
         );
     }

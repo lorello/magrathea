@@ -12,6 +12,7 @@ class Node extends \Documents\Base
     protected static $attrs = array(
         'hostname'   => array('type' => 'string', 'null' => false, 'regexp' => self::HOSTNAME_REGEXP),
         'fqdn'       => array('type' => 'string', 'null' => false, 'regexp' => self::FQDN_REGEXP),
+        'cluster'    => array('model' => 'Documents\Cluster', 'type' => 'reference'),
         'lastupdate' => array('type' => 'timestamp', 'autoupdate' => true)
     );
 }

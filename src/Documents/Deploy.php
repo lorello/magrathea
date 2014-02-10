@@ -8,6 +8,7 @@ class Deploy extends \Documents\Base
 
     protected static $attrs = array(
         'app'        => array('model' => 'Documents\App', 'type' => 'reference'),
+        'owner'      => array('model' => 'Documents\User', 'type' => 'reference'),
         'instance'   => array('model' => 'Documents\Instance', 'type' => 'reference'),
         'lastupdate' => array('type' => 'timestamp', 'autoupdate' => true)
     );

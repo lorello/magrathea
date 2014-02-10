@@ -10,7 +10,8 @@ class User extends \Documents\Base
         'name'       => array('default' => 'anonym', 'type' => 'string'),
         'email'      => array('type' => 'string'),
         'password'   => array('type' => 'string'),
-        'lastupdate' => array('type' => 'timestamp', 'autoupdate' => true)
+        'roles'      => array('type' => 'string', 'default' => 'ROLE_USER'),
+        'lastupdate' => array('type' => 'timestamp', 'autoupdate' => true),
     );
 
     public static $reserved_names = array(

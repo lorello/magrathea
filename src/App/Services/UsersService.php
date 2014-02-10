@@ -16,6 +16,11 @@ class UsersService extends BaseService
         return User::one(array('email' => $value));
     }
 
+    public function getByName($value)
+    {
+        return User::one(array('name' => $value));
+    }
+
     public function getAll()
     {
         $users = User::all();
@@ -23,7 +28,8 @@ class UsersService extends BaseService
             $result[] = array(
                 'id'    => (string)$u->getId(),
                 'name'  => $u->getName(),
-                'email' => $u->getEmail()
+                'email' => $u->getEmail(),
+                'roles' => $u->getRoles(),
             );
         }
 

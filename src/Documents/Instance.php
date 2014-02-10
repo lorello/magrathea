@@ -12,5 +12,4 @@ class Instance extends \Documents\Base
         'cluster'    => array('model' => 'Documents\Cluster', 'type' => 'reference'),
         'lastupdate' => array('type' => 'timestamp', 'autoupdate' => true),
     );
-
 }

@@ -9,6 +9,7 @@ class Cluster extends \Documents\Base
     protected static $attrs = array(
         'name'       => array('type' => 'string', 'regexp' => '[a-z][a-z0-9]{2,}'),
         'layers'     => array('model' => 'Documents\Node', 'type' => 'embeds'),
+        'owner'      => array('model' => 'Documents\User', 'type' => 'reference'),
         'lastupdate' => array('type' => 'timestamp', 'autoupdate' => true)
     );
 
