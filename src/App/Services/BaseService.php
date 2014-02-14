@@ -4,7 +4,7 @@ namespace App\Services;
 
 class BaseService
 {
-    protected $db;
+    //protected $db;
 
     public function __construct()
     {

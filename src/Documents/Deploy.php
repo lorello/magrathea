@@ -7,9 +7,9 @@ class Deploy extends \Documents\Base
     static $collection = 'deploys';
 
     protected static $attrs = array(
-        'app'        => array('model' => 'Documents\App', 'type' => 'reference'),
-        'owner'      => array('model' => 'Documents\User', 'type' => 'reference'),
-        'instance'   => array('model' => 'Documents\Instance', 'type' => 'reference'),
+        'app'        => array('model' => 'Documents\App', 'type' => 'reference', 'null' => false),
+        'owner'      => array('model' => 'Documents\User', 'type' => 'reference', 'null' => false),
+        'instance'   => array('model' => 'Documents\Instance', 'type' => 'reference', 'null' => false),
         'lastupdate' => array('type' => 'timestamp', 'autoupdate' => true)
     );
 

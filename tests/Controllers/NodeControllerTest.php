@@ -10,6 +10,9 @@ class NodeControllerTest extends WebTestCase
 
     public function createApplication()
     {
+        putenv('APPLICATION_ENV', 'testing');
+
+
         // I'm using sessions?
         // $app['session.test'] = true;
         $app = new \Silex\Application();

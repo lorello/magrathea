@@ -22,16 +22,7 @@ class NodesServiceTest extends \PHPUnit_Framework_TestCase
         $app = new Application();
         require __DIR__ . '/../../resources/config/test.php';
 
-        $app->register(
-            new MongodmServiceProvider(),
-            array(
-                "mongodm.host"     => $app['config.mongo.host'],
-                "mongodm.db"       => $app['config.mongo.db'],
-                "mongodm.username" => $app['config.mongo.username'],
-                "mongodm.password" => $app['config.mongo.password'],
-                "mongodm.options"  => $app['config.mongo.options']
-            )
-        );
+        $app->register(new MongodmServiceProvider());
 
         $this->nodesService = new NodesService();
         $this->nodesService->init();

@@ -23,7 +23,8 @@ class UsersService extends BaseService
 
     public function getAll()
     {
-        $users = User::all();
+        $users  = User::all();
+        $result = array();
         foreach ($users as $u) {
             $result[] = array(
                 'id'    => (string)$u->getId(),
@@ -43,6 +44,7 @@ class UsersService extends BaseService
         $user->setName($data['name']);
         $user->setEmail($data['email']);
         $user->setPassword($data['password']);
+        $user->activation_key = $data['activation_key'];
         $user->save();
 
         // return the MongoId object
@@ -69,4 +71,15 @@ class UsersService extends BaseService
 
         return $user->delete();
     }
+
+    public function isActivable($key)
+    {
+        $user = User::one(array('activation_key' => $key, 'enabled' => false));
+        if (!$user) {
+            throw new \Exception("Activation key not valid or user already activated");
+        }
+
+        return $user->getId();
+    }
+
 }

@@ -12,19 +12,28 @@ class RoutesLoader
     {
         $this->app = $app;
         $this->instantiateControllers();
-
     }
 
     private function instantiateControllers()
     {
-        $this->app['users.controller'] = $this->app->share(
+        $this->app['users.controller']    = $this->app->share(
             function () {
                 return new Controllers\UsersController($this->app['users.service']);
             }
         );
-        $this->app['nodes.controller'] = $this->app->share(
+        $this->app['nodes.controller']    = $this->app->share(
             function () {
                 return new Controllers\NodesController($this->app['nodes.service']);
+            }
+        );
+        $this->app['clusters.controller'] = $this->app->share(
+            function () {
+                return new Controllers\ClustersController($this->app['clusters.service']);
+            }
+        );
+        $this->app['apps.controller']     = $this->app->share(
+            function () {
+                return new Controllers\AppsController($this->app['apps.service']);
             }
         );
     }
@@ -37,6 +46,9 @@ class RoutesLoader
         $api->post('/users', 'users.controller:save');
         $api->put('/users/{id}', 'users.controller:update');
         $api->delete('/users/{id}', 'users.controller:delete');
+
+        $api->post('/user/register', 'users.controller:register');
+        $api->post('/user/activate/{activation_key}', 'users.controller:activate');
 
         $api->get('/clusters', 'clusters.controller:getAll');
         $api->post('/clusters', 'clusters.controller:save');
