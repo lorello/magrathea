@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 interface ControllerInterface
 {
-    public function __construct($service);
+    public function __construct($service, $security);
 
     public function getAll();
 
