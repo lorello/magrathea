@@ -6,6 +6,13 @@ use Documents\Node;
 
 class NodesService extends BaseService
 {
+    private $userService;
+
+    public function __construct($userService)
+    {
+        $this->userService = $userService;
+    }
+
     public function init()
     {
         $n = new Node();
@@ -23,9 +30,9 @@ class NodesService extends BaseService
         return $item;
     }
 
-    public function getByHostname($value)
+    public function getByName($value)
     {
-        return Node::one(array('hostname' => $value));
+        return Node::one(array('name' => $value));
     }
 
     public function getAll()
@@ -34,9 +41,9 @@ class NodesService extends BaseService
         $result = array();
         foreach ($nodes as $n) {
             $result[] = array(
-                'id'       => (string)$n->getId(),
-                'hostname' => $n->getHostname(),
-                'fqdn'     => $n->getFqdn()
+                'id'   => (string)$n->getId(),
+                'name' => $n->getName(),
+                'fqdn' => $n->getFqdn()
             );
         }
 
@@ -46,8 +53,9 @@ class NodesService extends BaseService
     public function save($data)
     {
         $node = new Node();
-        $node->setHostname($data['hostname']);
+        $node->setname($data['name']);
         $node->setFqdn($data['fqdn']);
+        $node->setOwner($this->userService->getByName($data['username']));
         $node->save();
 
         // return the MongoId object

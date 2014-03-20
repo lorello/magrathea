@@ -7,6 +7,13 @@ use Documents\User;
 
 class AppsService extends BaseService
 {
+    private $userService;
+
+    public function __construct($userService)
+    {
+        $this->userService = $userService;
+    }
+
     public function get($id)
     {
         $item = App::id($id);
@@ -40,13 +47,9 @@ class AppsService extends BaseService
 
     public function save($data)
     {
-        $owner = User::id($data['owner']);
-        if (!$owner instanceof User) {
-            throw new \Exception("Cannot find App owner '$data[owner]''");
-        }
         $item = new App();
         $item->setName($data['name']);
-        $item->setOwner($owner);
+        $item->setOwner($this->userService->getByName($data['username']));
         $item->setConf($data['conf']);
         $item->save();
 
@@ -74,4 +77,25 @@ class AppsService extends BaseService
 
         return $item->delete();
     }
+
+    public function connect($id, $instance_id)
+    {
+        $a = App::id($id);
+        if (!$a) {
+            throw new \Exception("Application with id '$id' not found");
+        }
+        $i = Instance::id($instance_id);
+        if (!$i) {
+            throw new \Exception("Instance with id '$instance_id' not found");
+        }
+        if (!empty($i->getApp())) {
+            throw new \Exception("Instance is already connected to an App, please disconnect it first.");
+        }
+        if (empty($i->getCluster())) {
+            throw new \Exception("Instance id '$instance_id' it's not valid, it has not cluster assigned");
+        }
+        $data['app'] = $a;
+        Instance::update($instance_id, $data);
+    }
 }
+

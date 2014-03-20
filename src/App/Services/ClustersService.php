@@ -3,9 +3,21 @@
 namespace App\Services;
 
 use Documents\Cluster;
+use Documents\Layer;
 
 class ClustersService extends BaseService
 {
+    private $userService;
+    private $instanceService;
+    private $nodeService;
+
+    public function __construct($userService, $instanceService, $nodeService)
+    {
+        $this->userService     = $userService;
+        $this->instanceService = $instanceService;
+        $this->nodeService     = $nodeService;
+    }
+
     public function get($id)
     {
         $item = Cluster::id($id);
@@ -39,10 +51,11 @@ class ClustersService extends BaseService
 
     public function save($data)
     {
+        $user = $this->userService->getByName($data['username']);
+
         $cluster = new Cluster();
         $cluster->setName($data['name']);
-        $cluster->setLayers($data['layers']);
-        $cluster->setOwner($data['owner']);
+        $cluster->setOwner($user);
         $cluster->save();
 
         // return the MongoId object
@@ -68,5 +81,55 @@ class ClustersService extends BaseService
         }
 
         return $cluster->delete();
+    }
+
+    public function getNodeLayer($node)
+    {
+        foreach ($this->layers as $layer) {
+            if ($layer->nodes->has($node)) {
+                return $layer;
+            }
+        }
+
+        return false;
+    }
+
+    public function addNode($id, $layer_name, $node_id)
+    {
+        # TODO: add check for ownership
+        $cluster = Cluster::id($id);
+        if (!$cluster) {
+            throw new \Exception("Cluster with id '$id' not found");
+        }
+
+        $cluster->layers = array();
+        $cluster->save();
+
+        $layer = new Layer();
+        $layer->setIsEmbed(true);
+        $layer->name = $layer_name;
+        if (!$cluster->layers->has($layer)) {
+            $cluster->layers->add($layer);
+            $cluster->save();
+
+        }
+
+        $node = $this->nodeService->Get($node_id);
+        if (!$node) {
+            throw new \Exception("Node must exists before adding to a cluster, but node with id '$id' does not exists");
+        }
+
+        if ($l = $this->getNodeLayer($node)) {
+            throw new \Exception("Node $node is already part of layer $l");
+        }
+        $cluster->layers[$layer_name]->add($node);
+
+
+        return array(
+            'id'     => (string)$cluster->getId(),
+            'name'   => $cluster->getName(),
+            'layers' => $cluster->getLayers()->toArray(),
+            'owner'  => $cluster->getOwner(),
+        );
     }
 }
