@@ -2,7 +2,6 @@ Index to create on INIT
 
 db.users.ensureIndex( { "email": 1 }, { unique: true } )
 db.users.ensureIndex( { "name": 1 }, { unique: true } )
-db.nodes.ensureIndex( { "hostname": 1 }, { unique: true } )
+db.nodes.ensureIndex( { "name": 1 }, { unique: true } )
 db.nodes.ensureIndex( { "fqdn": 1 }, { unique: true } )
 db.clusters.ensureIndex( { "name": 1 }, { unique: true } )
-db.sessions.ensureIndex( { "createdAt": 1 }, { expireAfterSeconds: 3600 } )

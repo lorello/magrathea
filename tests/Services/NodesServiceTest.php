@@ -1,5 +1,6 @@
 <?php
 
+
 namespace Tests\Services;
 
 use Silex\Application;
@@ -10,7 +11,6 @@ use Purekid\Mongodm\MongoDB;
 use App\Services\NodesService;
 use Documents\Node;
 
-date_default_timezone_set('Europe/Rome');
 
 class NodesServiceTest extends \PHPUnit_Framework_TestCase
 {
@@ -18,11 +18,7 @@ class NodesServiceTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-
         $app = new Application();
-        require __DIR__ . '/../../resources/config/test.php';
-
-        $app->register(new MongodmServiceProvider());
 
         $this->nodesService = new NodesService();
         $this->nodesService->init();
@@ -84,5 +80,4 @@ class NodesServiceTest extends \PHPUnit_Framework_TestCase
         $id   = $this->nodesService->save($node);
         $this->assertEquals($id, $this->nodesService->getByHostname($node['hostname'])->getId());
     }
-
 }

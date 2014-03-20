@@ -1,11 +1,11 @@
 <?php
 
-namespace Tests\Controllers;
+namespace Tests;
 
 use Silex\Application;
 use Silex\WebTestCase;
 
-class NodeControllerTest extends WebTestCase
+class BasicApiTest extends WebTestCase
 {
 
     // Interface for WebTestCase
@@ -15,12 +15,12 @@ class NodeControllerTest extends WebTestCase
         // $app['session.test'] = true;
         $app = new \Silex\Application();
 
-        require __DIR__ . '/../../resources/config/test.php';
+        require __DIR__ . '/../resources/config/test.php';
 
-        return require __DIR__ . '/../../src/app.php';
+        return require __DIR__ . '/../src/app.php';
     }
 
-    public function testNodeCreate()
+    public function testIndex()
     {
         $client  = $this->createClient();
         $crawler = $client->request(
