@@ -10,10 +10,13 @@ class BaseController implements ControllerInterface
 {
 
     protected $service;
+    protected $security;
 
-    public function __construct($service)
+    # TODO: Add types on parameters
+    public function __construct($service, $security)
     {
-        $this->service = $service;
+        $this->service  = $service;
+        $this->security = $security;
     }
 
     public function getAll()
@@ -62,4 +65,19 @@ class BaseController implements ControllerInterface
         return new JsonResponse($result);
     }
 
+    public function getCurrentUser()
+    {
+        $token = $this->security->getToken();
+
+        if ($token === null) {
+            throw new \Exception("Operation not permitted as anonymous user, please login first.");
+        }
+
+        $sfUser = $token->getUser();
+        if (!$sfUser->isEnabled()) {
+            throw new \Exception("Operation not permitted for unconfirmed user, please activate your account first.");
+        }
+
+        return $sfUser->getUsername();
+    }
 }
