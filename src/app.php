@@ -19,20 +19,12 @@ use Wildsurfer\Provider\MongodmServiceProvider;
 use Purekid\Mongodm\MongoDB;
 
 date_default_timezone_set('Europe/Rome');
-define("ROOT_PATH", __DIR__ . "/..");
-define('MONGODM_CONFIG', ROOT_PATH . '/resources/config/mongodm.php');
+if (!defined('ROOT_PATH'))
+    define('ROOT_PATH', __DIR__ . "/..");
+if (!defined('MONGODM_CONFIG'))
+    define('MONGODM_CONFIG', ROOT_PATH . '/resources/config/mongodm.php');
 
 $app->register(new ServiceControllerServiceProvider());
-
-/*
-$app->register(new MongodmServiceProvider(), array(
-        "mongodm.host"     => $app['config.mongo.host'],
-        "mongodm.db"       => $app['config.mongo.db'],
-        "mongodm.username" => $app['config.mongo.username'],
-        "mongodm.password" => $app['config.mongo.password'],
-        "mongodm.options"  => $app['config.mongo.options']
-    ));
-*/
 
 $app->register(
     new HttpCacheServiceProvider(),
@@ -57,27 +49,37 @@ $app->register(
     array(
         'security.firewalls' => array(
             'test'    => array(
-                'security' => false,
-                'pattern'  => '^/test',
+                'pattern'   => '^/test/.*',
+                'http'      => true,
+                'security'  => true,
+                'stateless' => true,
+                'users'     => $app->share(
+                    function () use ($app) {
+                        return new App\UserProvider($app['users.service']);
+                    }
+                ),
             ),
             'user'    => array(
                 'anonymous' => true,
-                #'pattern'   => '^/'.$app['api.endpoint'].'/'.$app['api.version'].'/users/(register|activate/[a-z0-9]+)$',
-                'pattern'   => '^/api/v1/user/(register|activate/[a-z0-9]+)'
+                'pattern'   => '^'.$app['api.endpoint'].'/'.$app['api.version'].'/user/(register|activate/[a-z0-9]+)$',
             ),
-            'default' => array(
-                //'security'  => $app['debug'] ? false : true,
+            'api' => array(
+                #'security'  => $app['debug'] ? false : true,
                 'security'  => true,
-                //'pattern'   => '^/$app[api.endpoint]/$app[api.version]',
-                'pattern'   => '^/.*',
+                'pattern'   => '^'.$app['api.endpoint'].'/'.$app['api.version'],
+                #'pattern'   => '^/.*',
                 'http'      => true,
                 'stateless' => true, // don't create cookie for http auth, it send credentials on each request
                 'users'     => $app->share(
-                        function () use ($app) {
-                            return new App\UserProvider($app['users.service']);
-                        }
-                    ),
+                    function () use ($app) {
+                        return new App\UserProvider($app['users.service']);
+                    }
+                ),
             ),
+            'default' => array(
+                'anonymous' => true,
+                'pattern'   => '^/.*'
+            )
         )
     )
 );
@@ -86,9 +88,9 @@ $app['security.role_hierarchy'] = array(
 );
 
 $app['security.access_rules'] = array(
-    array('^/api/v1/users', 'ROLE_ADMIN'),
-    array('^/api/v1/nodes', 'ROLE_ADMIN'),
-    array('^/api/v1/clusters', 'ROLE_ADMIN'),
+    array('^'.$app['api.endpoint'].'/'.$app['api.version'].'/users', 'ROLE_ADMIN'),
+    array('^'.$app['api.endpoint'].'/'.$app['api.version'].'/nodes', 'ROLE_ADMIN'),
+    array('^'.$app['api.endpoint'].'/'.$app['api.version'].'/clusters', 'ROLE_USER'),
     #array('^/api/v1/.*$', 'ROLE_USER'),
 );
 
@@ -130,24 +132,23 @@ $app->before(
 $app->get(
     '/',
     function () use ($app) {
-        return 'Magrathea is UP: ' . $app['config.mongo.db'];
+        #return new JsonResponse(array('message'=>'Magrathea is UP'));
+        phpinfo();
     }
 );
 
 $app->match(
-    '/test',
+    '/test/security',
     function (Request $request) use ($app) {
-        $result = 'Test call';
-        /*foreach ($request->request->all() as $key => $value) {
-            $result .= $key . '=' . $value . '|';
-        }*/
+        $result = '<h1>Test call</h1>';
+
         $token = $app['security']->getToken();
 
-        if ($token !== null) {
-            $user = $token->getUser();
-            $result .= "Are you $user?";
-        } else {
+        if ($token === null) {
             $result .= 'Are you anon? Login please!';
+        } else {
+            $user = $token->getUser();
+            $result .= "Are you ".$user->getUsername()."?\n";
         }
 
         return $result;
@@ -155,11 +156,10 @@ $app->match(
 );
 
 $app->get(
-    '/mongo/name/{name}',
+    '/test/mongo/add/{name}',
     function ($name) use ($app) {
         $user       = new Documents\User();
         $user->name = $name;
-        $user->age  = 10;
         if ($user->save()) {
             return "Created $name";
         }
@@ -169,12 +169,12 @@ $app->get(
 );
 
 $app->get(
-    '/mongo/users',
+    '/test/mongo/users',
     function () use ($app) {
         $users = Documents\User::all();
         $s     = '';
         foreach ($users as $u) {
-            $s .= $u->getName();
+            $s .= $u->getName().':'.$u->getPassword();
         }
 
         return $s;
