@@ -1,14 +1,10 @@
 <?php
 require __DIR__ . '/prod.php';
+
+putenv('APPLICATION_ENV=testing');
+
 $app['debug']     = true;
 $app['log.level'] = Monolog\Logger::DEBUG;
-/*
-$app['config.mongo.host']     = 'localhost:27017';
-$app['config.mongo.db']       = 'magrathea-test';
-$app['config.mongo.username'] = 'zaphod';
-$app['config.mongo.password'] = '42';
-$app['config.mongo.options']  = array(
-    'w' => 1
-);
 
-*/
+// raw errors are probably more readable during tests
+$app['exception_handler']->disable();

@@ -1,12 +1,13 @@
 <?php
 return array(
-
-    'default'     => array(
-        'connection' => array(
-            'hostnames' => 'localhost',
-            'database'  => 'magrathea',
-        )
-    ),
+    /*
+        'default'     => array(
+            'connection' => array(
+                'hostnames' => 'localhost',
+                'database'  => 'magrathea',
+            )
+        ),
+    */
     'development' => array(
         'connection' => array(
             'hostnames' => 'localhost',
