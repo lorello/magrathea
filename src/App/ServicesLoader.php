@@ -22,17 +22,22 @@ class ServicesLoader
         );
         $this->app['apps.service']     = $this->app->share(
             function () {
-                return new Services\AppsService();
+                return new Services\AppsService($this->app['users.service']);
             }
         );
-        $this->app['nodes.service']    = $this->app->share(
+        $this->app['instances.service']     = $this->app->share(
             function () {
-                return new Services\NodesService();
+                return new Services\InstancesService($this->app['users.service']);
             }
         );
         $this->app['clusters.service'] = $this->app->share(
             function () {
-                return new Services\ClustersService();
+                return new Services\ClustersService($this->app['users.service'], $this->app['instances.service'], $this->app['nodes.service']);
+            }
+        );
+        $this->app['nodes.service']    = $this->app->share(
+            function () {
+                return new Services\NodesService($this->app['users.service']);
             }
         );
     }
