@@ -27,7 +27,7 @@ class User extends \Documents\Base
         'humma',
     );
 
-    // Should be unique? Should I introduce Organizations concept?
+    // TODO: Should be unique? Should I introduce Organizations concept? Should be unique inside a single org
     function setName($value)
     {
         if (User::count(array('name' => $value)) > 0) {
