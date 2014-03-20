@@ -8,68 +8,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-# TODO: Add extends BaseController
-class UsersController
+class UsersController extends BaseController
 {
-
-    protected $usersService;
-
-    public function __construct($service)
-    {
-        $this->usersService = $service;
-    }
-
-    public function getAll()
-    {
-        return new JsonResponse($this->usersService->getAll());
-    }
-
-    public function save(Request $request)
-    {
-        $user = $this->getDataFromRequest($request);
-        try {
-            $result = $this->usersService->save($user);
-        } catch (Exception $e) {
-            return new JsonResponse(array('message' => $e->getMessage()), 500);
-        }
-        $id = (string)$result;
-
-        return new JsonResponse(array(
-            "id"    => $id,
-            'name'  => $user['name'],
-            'email' => $user['email'],
-        ), 201);
-    }
-
-    public function update($id, Request $request)
-    {
-        $data = $this->getDataFromRequest($request);
-
-        try {
-            $result = $this->usersService->update($id, $data);
-        } catch (Exception $e) {
-            // TODO: Should I return 404 if user does not exists?
-            return new JsonResponse(array('message' => $e->getMessage()), 500);
-        }
-
-        return new JsonResponse(array(
-            "id"    => $id,
-            'name'  => $data['name'],
-            'email' => $data['email'],
-        ), 200);
-    }
-
-    public function delete($id)
-    {
-        try {
-            $result = $this->usersService->delete($id);
-        } catch (Exception $e) {
-            return new JsonResponse(array('message' => $e->getMessage()), 500);
-        }
-
-        return new JsonResponse($result);
-    }
-
     private function encryptPassword(Application $app, $username, $password)
     {
         // Empty password become unempty encrypted password, so I check here;
@@ -90,8 +30,12 @@ class UsersController
     {
         $data = $this->getDataFromRequest($request);
 
+        if (empty($data['email'])) {
+            throw new \Exception("Parameter email is required");
+        }
+
         // check if user is already registerd
-        $user = $this->usersService->getByEmail($data['email']);
+        $user = $this->service->getByEmail($data['email']);
         if ($user instanceof \Documents\User) {
             throw new \Exception("User with email '$data[email]' already registered");
         }
@@ -102,7 +46,7 @@ class UsersController
         $data['activation_key'] = new \MongoId();
 
         try {
-            $result = $this->usersService->save($data);
+            $result = $this->service->save($data);
             $id     = (string)$result;
         } catch (Exception $e) {
             return new JsonResponse(array('message' => $e->getMessage()), 500);
@@ -125,7 +69,7 @@ class UsersController
     public function activate($activation_key)
     {
         try {
-            $id = $this->usersService->isActivable($activation_key);
+            $id = $this->service->isActivable($activation_key);
         } catch (Exception $e) {
             return new JsonResponse(array('message' => $e->getMessage()), 403);
         }
@@ -133,7 +77,7 @@ class UsersController
         $data['enabled']        = true;
         $data['activation_key'] = '';
         try {
-            $this->usersService->update($id, $data);
+            $this->service->update($id, $data);
         } catch (Exception $e) {
             return new JsonResponse(array('message' => $e->getMessage()), 500);
         }
@@ -141,7 +85,7 @@ class UsersController
         return new JsonResponse(array('message' => 'Account activated'));
     }
 
-    private function getDataFromRequest(Request $request)
+    public function getDataFromRequest(Request $request)
     {
         return array(
             'name'     => $request->request->get('name'),
