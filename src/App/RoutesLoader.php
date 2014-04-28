@@ -57,6 +57,7 @@ class RoutesLoader
 
         $api->get('/clusters', 'clusters.controller:getAll');
         $api->post('/clusters', 'clusters.controller:save');
+        $api->get('/clusters/{id}', 'clusters.controller:get');
         $api->put('/clusters/{id}', 'clusters.controller:update');
         $api->delete('/clusters/{id}', 'clusters.controller:delete');
 

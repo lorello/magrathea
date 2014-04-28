@@ -20,6 +20,8 @@ class ServicesLoader
                 return new Services\UsersService();
             }
         );
+        // each service that needs to manage user session must
+        // have the service users injected into it
         $this->app['apps.service']     = $this->app->share(
             function () {
                 return new Services\AppsService($this->app['users.service']);
