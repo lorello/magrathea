@@ -19,6 +19,11 @@ class BaseController implements ControllerInterface
         $this->security = $security;
     }
 
+    public function get($id)
+    {
+        return new JsonResponse($this->service->get($id));
+    }
+
     public function getAll()
     {
         return new JsonResponse($this->service->getAll());
