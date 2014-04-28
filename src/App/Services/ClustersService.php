@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Purekid\Mongodm;
 use Documents\Cluster;
 use Documents\Layer;
 
@@ -11,7 +12,7 @@ class ClustersService extends BaseService
     private $instanceService;
     private $nodeService;
 
-    public function __construct($userService, $instanceService, $nodeService)
+    public function __construct(UsersService $userService, InstancesService $instanceService, NodesService $nodeService)
     {
         $this->userService     = $userService;
         $this->instanceService = $instanceService;
@@ -24,7 +25,8 @@ class ClustersService extends BaseService
         if (!($item instanceof Cluster)) {
             throw new \Exception("Cannnot find cluster with id '$id''");
         }
-
+        $u = $item->getOwner();
+        # debug: var_dump($u);
         return $item;
     }
 
@@ -51,15 +53,16 @@ class ClustersService extends BaseService
 
     public function save($data)
     {
+        $item = new Cluster();
+        $item->setName($data['name']);
         $user = $this->userService->getByName($data['username']);
+        $item->setOwner($user);
+        $item->save();
 
-        $cluster = new Cluster();
-        $cluster->setName($data['name']);
-        $cluster->setOwner($user);
-        $cluster->save();
-
+        $ref = $item->getOwner();
+        #var_dump($ref);
         // return the MongoId object
-        return $cluster->getId();
+        return $item->getId();
     }
 
     public function update($id, $data)
@@ -98,20 +101,28 @@ class ClustersService extends BaseService
     {
         # TODO: add check for ownership
         $cluster = Cluster::id($id);
+
         if (!$cluster) {
             throw new \Exception("Cluster with id '$id' not found");
         }
 
-        $cluster->layers = array();
-        $cluster->save();
+        #var_dump($cluster->owner->name);
+        #$cluster->layers = array();
+        #$cluster->save();
 
         $layer = new Layer();
         $layer->setIsEmbed(true);
         $layer->name = $layer_name;
-        if (!$cluster->layers->has($layer)) {
+        $cluster->layer = $layer;
+
+        $cluster->layers = \Purekid\Mongodm\Collection::make(array($layer));
+
+        $cluster->save();
+
+        /*
+         if (!$cluster->layers->has($layer)) {
             $cluster->layers->add($layer);
             $cluster->save();
-
         }
 
         $node = $this->nodeService->Get($node_id);
@@ -123,7 +134,7 @@ class ClustersService extends BaseService
             throw new \Exception("Node $node is already part of layer $l");
         }
         $cluster->layers[$layer_name]->add($node);
-
+        */
 
         return array(
             'id'     => (string)$cluster->getId(),
