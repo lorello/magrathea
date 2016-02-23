@@ -8,36 +8,36 @@ class UsersService extends BaseService
 {
     public function get($id)
     {
-        return User::one(array('id' => $id));
+        return User::one(['id' => $id]);
     }
 
     public function getByEmail($value)
     {
-        return User::one(array('email' => $value));
+        return User::one(['email' => $value]);
     }
 
     public function getByName($value)
     {
-        return User::one(array('name' => $value));
+        return User::one(['name' => $value]);
     }
 
     public function getAll()
     {
-        $users  = User::all();
-        $result = array();
+        $users = User::all();
+        $result = [];
         foreach ($users as $u) {
-            $result[] = array(
-                'id'    => (string)$u->getId(),
+            $result[] = [
+                'id'    => (string) $u->getId(),
                 'name'  => $u->getName(),
                 'email' => $u->getEmail(),
                 'roles' => $u->getRoles(),
-            );
+            ];
         }
 
         return $result;
     }
 
-    function save($data)
+    public function save($data)
     {
         $user = new User();
         // not needed
@@ -51,7 +51,7 @@ class UsersService extends BaseService
         return $user->getId();
     }
 
-    function update($id, $data)
+    public function update($id, $data)
     {
         $user = User::id($id);
         if (!$user) {
@@ -62,7 +62,7 @@ class UsersService extends BaseService
         return $user->save();
     }
 
-    function delete($id)
+    public function delete($id)
     {
         $user = User::id($id);
         if (!$user) {
@@ -74,12 +74,11 @@ class UsersService extends BaseService
 
     public function isActivable($key)
     {
-        $user = User::one(array('activation_key' => $key, 'enabled' => false));
+        $user = User::one(['activation_key' => $key, 'enabled' => false]);
         if (!$user) {
-            throw new \Exception("Activation key not valid or user already activated");
+            throw new \Exception('Activation key not valid or user already activated');
         }
 
         return $user->getId();
     }
-
 }

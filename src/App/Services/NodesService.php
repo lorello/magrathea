@@ -32,19 +32,19 @@ class NodesService extends BaseService
 
     public function getByName($value)
     {
-        return Node::one(array('name' => $value));
+        return Node::one(['name' => $value]);
     }
 
     public function getAll()
     {
-        $nodes  = Node::all();
-        $result = array();
+        $nodes = Node::all();
+        $result = [];
         foreach ($nodes as $n) {
-            $result[] = array(
-                'id'   => (string)$n->getId(),
+            $result[] = [
+                'id'   => (string) $n->getId(),
                 'name' => $n->getName(),
-                'fqdn' => $n->getFqdn()
-            );
+                'fqdn' => $n->getFqdn(),
+            ];
         }
 
         return $result;

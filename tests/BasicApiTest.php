@@ -7,7 +7,6 @@ use Silex\WebTestCase;
 
 class BasicApiTest extends WebTestCase
 {
-
     // Interface for WebTestCase
     public function createApplication()
     {
@@ -15,22 +14,22 @@ class BasicApiTest extends WebTestCase
         // $app['session.test'] = true;
         $app = new \Silex\Application();
 
-        require __DIR__ . '/../resources/config/test.php';
+        require __DIR__.'/../resources/config/test.php';
 
-        return require __DIR__ . '/../src/app.php';
+        return require __DIR__.'/../src/app.php';
     }
 
     public function testIndex()
     {
-        $client  = $this->createClient();
+        $client = $this->createClient();
         $crawler = $client->request(
             'GET',
             '/',
-            array(),
-            array(),
-            array(
+            [],
+            [],
+            [
                 'CONTENT_TYPE' => 'application/json',
-            )
+            ]
         );
         $this->assertTrue(
             $client->getResponse()->headers->contains(

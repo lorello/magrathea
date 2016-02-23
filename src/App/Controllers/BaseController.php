@@ -4,18 +4,16 @@ namespace App\Controllers;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 class BaseController implements ControllerInterface
 {
-
     protected $service;
     protected $security;
 
-    # TODO: Add types on parameters
+    // TODO: Add types on parameters
     public function __construct($service, $security)
     {
-        $this->service  = $service;
+        $this->service = $service;
         $this->security = $security;
     }
 
@@ -36,7 +34,7 @@ class BaseController implements ControllerInterface
             // return object MondoId
             $id = $this->service->save($data);
         } catch (Exception $e) {
-            return new JsonResponse(array('message' => $e->getMessage()), 500);
+            return new JsonResponse(['message' => $e->getMessage()], 500);
         }
 
         $item = $this->service->get($id);
@@ -52,7 +50,7 @@ class BaseController implements ControllerInterface
             $result = $this->service->update($id, $data);
         } catch (Exception $e) {
             // TODO: Should I return 404 if user does not exists?
-            return new JsonResponse(array('message' => $e->getMessage()), 500);
+            return new JsonResponse(['message' => $e->getMessage()], 500);
         }
         $item = $this->service->get($id);
 
@@ -64,7 +62,7 @@ class BaseController implements ControllerInterface
         try {
             $result = $this->service->delete($id);
         } catch (Exception $e) {
-            return new JsonResponse(array('message' => $e->getMessage()), 500);
+            return new JsonResponse(['message' => $e->getMessage()], 500);
         }
 
         return new JsonResponse($result);
@@ -75,12 +73,12 @@ class BaseController implements ControllerInterface
         $token = $this->security->getToken();
 
         if ($token === null) {
-            throw new \Exception("Operation not permitted as anonymous user, please login first.");
+            throw new \Exception('Operation not permitted as anonymous user, please login first.');
         }
 
         $sfUser = $token->getUser();
         if (!$sfUser->isEnabled()) {
-            throw new \Exception("Operation not permitted for unconfirmed user, please activate your account first.");
+            throw new \Exception('Operation not permitted for unconfirmed user, please activate your account first.');
         }
 
         return $sfUser->getUsername();

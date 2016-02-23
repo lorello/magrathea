@@ -18,20 +18,20 @@ class InstancesService extends BaseService
 
     public function getByName($value)
     {
-        return Instance::one(array('name' => $value));
+        return Instance::one(['name' => $value]);
     }
 
     public function getAll()
     {
-        $items  = Instance::all();
-        $result = array();
+        $items = Instance::all();
+        $result = [];
         foreach ($items as $item) {
-            $result[] = array(
-                'id'      => (string)$item->getId(),
+            $result[] = [
+                'id'      => (string) $item->getId(),
                 'name'    => $item->getName(),
                 'app'     => $item->getApp(),
-                'cluster' => $item->getCluster()
-            );
+                'cluster' => $item->getCluster(),
+            ];
         }
 
         return $result;

@@ -10,7 +10,6 @@ class Base extends \Purekid\Mongodm\Model
         $attrs = self::getAttrs();
 
         foreach ($attrs as $key => $attr) {
-
             $value = $this->__get($key);
 
             // Manage field attribute NOT NULL
@@ -25,13 +24,13 @@ class Base extends \Purekid\Mongodm\Model
                 isset($attr['autoupdate']) and ($attr['autoupdate'] === true)
             ) {
                 $date = new \DateTime();
-                $ts   = $date->getTimestamp();
+                $ts = $date->getTimestamp();
                 $this->__set($key, $ts);
             }
 
             // Manage field attribute 'regexp'
             if ((isset($attr['type']) and $attr['type'] == self::DATA_TYPE_STRING) and isset($attr['regexp'])) {
-                $filter_options = array('options' => array('regexp' => '/' . $attr['regexp'] . '/'));
+                $filter_options = ['options' => ['regexp' => '/'.$attr['regexp'].'/']];
                 if (!filter_var($value, FILTER_VALIDATE_REGEXP, $filter_options)) {
                     throw new \Exception("The field '$key' doesn't validate against expression '$attr[regexp]'");
                 }
@@ -40,5 +39,4 @@ class Base extends \Purekid\Mongodm\Model
 
         return parent::__preSave();
     }
-
 }

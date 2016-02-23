@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use Documents\App;
-use Documents\User;
 
 class AppsService extends BaseService
 {
@@ -26,20 +25,20 @@ class AppsService extends BaseService
 
     public function getByName($value)
     {
-        return App::one(array('name' => $value));
+        return App::one(['name' => $value]);
     }
 
     public function getAll()
     {
-        $items  = App::all();
-        $result = array();
+        $items = App::all();
+        $result = [];
         foreach ($items as $item) {
-            $result[] = array(
-                'id'    => (string)$item->getId(),
+            $result[] = [
+                'id'    => (string) $item->getId(),
                 'name'  => $item->getName(),
                 'owner' => $item->getOwner(),
-                'conf'  => $item->getConf()
-            );
+                'conf'  => $item->getConf(),
+            ];
         }
 
         return $result;
@@ -89,7 +88,7 @@ class AppsService extends BaseService
             throw new \Exception("Instance with id '$instance_id' not found");
         }
         if (!empty($i->getApp())) {
-            throw new \Exception("Instance is already connected to an App, please disconnect it first.");
+            throw new \Exception('Instance is already connected to an App, please disconnect it first.');
         }
         if (empty($i->getCluster())) {
             throw new \Exception("Instance id '$instance_id' it's not valid, it has not cluster assigned");
@@ -98,4 +97,3 @@ class AppsService extends BaseService
         Instance::update($instance_id, $data);
     }
 }
-
