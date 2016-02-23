@@ -1,15 +1,14 @@
 <?php
 
-# Document embedded in Clusters
+// Document embedded in Clusters
 
 namespace Documents;
 
 class Layer extends \Documents\Base
 {
-
-    protected static $attrs = array(
-        'name'       => array('type' => 'string', 'regexp' => '[a-z][a-z0-9]{4,}', 'null' => false),
-        #'nodes'      => array( 'type' => 'references', 'model' => 'Documents\Node'),
-        'lastupdate' => array('type' => 'timestamp', 'autoupdate' => true),
-    );
+    protected static $attrs = [
+        'name'       => ['type' => 'string', 'regexp' => '[a-z][a-z0-9]{4,}', 'null' => false],
+        //'nodes'      => array( 'type' => 'references', 'model' => 'Documents\Node'),
+        'lastupdate' => ['type' => 'timestamp', 'autoupdate' => true],
+    ];
 }

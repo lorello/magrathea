@@ -4,13 +4,12 @@ namespace Documents;
 
 class Deploy extends \Documents\Base
 {
-    static $collection = 'deploys';
+    public static $collection = 'deploys';
 
-    protected static $attrs = array(
-        'app'        => array('model' => 'Documents\App', 'type' => 'reference', 'null' => false),
-        'owner'      => array('model' => 'Documents\User', 'type' => 'reference', 'null' => false),
-        'instance'   => array('model' => 'Documents\Instance', 'type' => 'reference', 'null' => false),
-        'lastupdate' => array('type' => 'timestamp', 'autoupdate' => true)
-    );
-
+    protected static $attrs = [
+        'app'        => ['model' => 'Documents\App', 'type' => 'reference', 'null' => false],
+        'owner'      => ['model' => 'Documents\User', 'type' => 'reference', 'null' => false],
+        'instance'   => ['model' => 'Documents\Instance', 'type' => 'reference', 'null' => false],
+        'lastupdate' => ['type' => 'timestamp', 'autoupdate' => true],
+    ];
 }

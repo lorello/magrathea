@@ -1,16 +1,9 @@
 <?php
 
-
 namespace Tests\Services;
 
-use Silex\Application;
-use Silex\Provider\DoctrineServiceProvider;
-use Wildsurfer\Provider\MongodmServiceProvider;
-use Purekid\Mongodm\MongoDB;
-
 use App\Services\NodesService;
-use Documents\Node;
-
+use Silex\Application;
 
 class NodesServiceTest extends \PHPUnit_Framework_TestCase
 {
@@ -26,58 +19,58 @@ class NodesServiceTest extends \PHPUnit_Framework_TestCase
 
     public function testGetAll()
     {
-        $data = array();
+        $data = [];
         $data = $this->nodesService->getAll();
         $this->assertNotNull($data);
     }
 
-    function testSave()
+    public function testSave()
     {
-        $data  = array(
+        $data = [
             'hostname' => 'testme',
-            'fqdn'     => 'testme.mydomain.tld'
-        );
-        $data  = $this->nodesService->save($data);
+            'fqdn'     => 'testme.mydomain.tld',
+        ];
+        $data = $this->nodesService->save($data);
         $nodes = $this->nodesService->getAll();
         $this->assertEquals(1, count($nodes));
     }
 
-    function testUpdate()
+    public function testUpdate()
     {
-        $node = array(
+        $node = [
             'hostname' => 'testme',
-            'fqdn'     => 'testme.mydomain.tld'
-        );
-        $id   = $this->nodesService->save($node);
-        $node = array(
+            'fqdn'     => 'testme.mydomain.tld',
+        ];
+        $id = $this->nodesService->save($node);
+        $node = [
             'hostname' => 'testanother',
-            'fqdn'     => 'testanother.mydomain.tld'
-        );
+            'fqdn'     => 'testanother.mydomain.tld',
+        ];
         $this->nodesService->update($id, $node);
         $data = $this->nodesService->get($id);
         $this->assertEquals('testanother', $data->getHostname());
         $this->assertEquals('testanother.mydomain.tld', $data->getFqdn());
     }
 
-    function testDelete()
+    public function testDelete()
     {
-        $node = array(
+        $node = [
             'hostname' => 'testme',
-            'fqdn'     => 'testme.mydomain.tld'
-        );
-        $id   = $this->nodesService->save($node);
+            'fqdn'     => 'testme.mydomain.tld',
+        ];
+        $id = $this->nodesService->save($node);
         $this->nodesService->delete($id);
         $data = $this->nodesService->getAll();
         $this->assertEquals(0, count($data));
     }
 
-    function testGetByHostname()
+    public function testGetByHostname()
     {
-        $node = array(
+        $node = [
             'hostname' => 'testme',
-            'fqdn'     => 'testme.mydomain.tld'
-        );
-        $id   = $this->nodesService->save($node);
+            'fqdn'     => 'testme.mydomain.tld',
+        ];
+        $id = $this->nodesService->save($node);
         $this->assertEquals($id, $this->nodesService->getByHostname($node['hostname'])->getId());
     }
 }
